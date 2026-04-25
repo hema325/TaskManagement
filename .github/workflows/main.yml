@@ -21,13 +21,13 @@ jobs:
     - name: restore, build, and publish
       run: |
         dotnet restore TaskManagement/TaskManagement.csproj
-        dotnet build TaskManagement/TaskManagement.csproj
-        dotnet publish TaskManagement/TaskManagement.csproj -o publish
+        dotnet build TaskManagement/TaskManagement.csproj -c Release --no-restore
+        dotnet publish TaskManagement/TaskManagement.csproj -c Release -o publish --no-restore --no-build
 
     - name: upload published files to artifact
       uses: actions/upload-artifact@v4
       with:
         name: app-artifact
-        path: /TaskManagement/publish
+        path: TaskManagement/publish
         retention-days: 1 
     
