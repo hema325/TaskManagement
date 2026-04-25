@@ -1,0 +1,75 @@
+<div class="container mt-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0">Tasks</h3>
+    <button class="btn btn-primary" routerLink="../create" *hasPermission="createPermission">Create Task</button>
+  </div>
+    <div class="table-responsive">
+    <table class="table table-hover align-middle">
+
+      <thead class="table-light">
+        <tr>
+          <th>#</th>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>User</th>
+          <th>Created At</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <!-- Row -->
+         @for(task of tasksList(); track task.id) {
+          <tr>
+            <td>{{task.id}}</td>
+
+            <td class="fw-semibold">
+              {{task.title}}
+            </td>
+
+            <td class="text-muted">
+              {{task.description}}
+            </td>
+
+            <td>
+              @if(task.isDone) {
+                <span class="badge bg-success">Done</span>
+              }
+              @else {
+                <span class="badge bg-secondary">Pending</span>
+              }
+            </td>
+
+            <td>
+              {{task.userName}}
+            </td>
+
+            <td>
+              {{task.createdAt | date:'short'}}
+            </td>
+
+            <td class="text-end">
+              <button class="btn btn-sm btn-outline-primary me-2" [routerLink]="['../update', task.id]" *hasPermission="updatePermission">
+                Update
+              </button>
+              <app-loading-button btnClass="btn btn-sm btn-outline-danger" lable="Delete" [loading]="task.id == deletedTaskId()" (clicked)="delete(task.id)" *hasPermission="deletePermission" />
+            </td>
+          </tr>
+        }
+      </tbody>
+
+    </table>
+    @if(loading()) {
+      <div class="text-center">
+        <div>
+            <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+            <span>Loading...</span>
+        </div>
+      </div>
+    }
+  </div>
+
+</div>

@@ -1,0 +1,81 @@
+<div class="container mt-5">
+
+  <div class="card shadow rounded-4 p-4 my-5 mx-auto" style="max-width: 800px;">
+
+    <h3 class="mb-4 text-center">Create User</h3>
+
+    <form [formGroup]="form">
+
+      <!-- User Name -->
+      <div class="mb-3">
+        <label class="form-label">User Name</label>
+        <input type="text" class="form-control" placeholder="Enter user name" [class.is-valid]="userName.valid && userName.touched" [class.is-invalid]="userName.invalid && userName.touched" formControlName="userName">
+        @if(userName.pending) {
+            <div class="text-primary">
+                <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                <span>Checking username...</span>
+            </div>
+        }
+        
+        @if(userName.hasError("required")) {
+            <div class="invalid-feedback">
+                Username is required
+            </div>
+        }
+
+        @if(userName.hasError("userNameTaken")) {
+            <div class="invalid-feedback">
+                Username is taken
+            </div>
+        }
+    </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-control" [class.is-valid]="password.valid && password.touched" [class.is-invalid]="password.invalid && password.touched" placeholder="Enter password" formControlName="password">
+        @if(password.hasError('required')) {
+            <div class="invalid-feedback">
+                Password is required
+            </div>
+        }
+        @if(password.hasError('pattern')) {
+            <div class="invalid-feedback">
+                Password must contain uppercase, lowercase, number and special character
+            </div>
+        }
+    </div>
+
+      <div class="mb-3">
+
+        <label class="form-label">Permissions</label>
+
+        <select class="form-select"
+                formControlName="permissions"
+                multiple
+                style="height: 200px;"
+                [class.is-valid]="permissions.valid && permissions.touched"
+                >
+
+            @for(permission of permissionsValues(); track permission) {
+                <option [value]="permission">
+                    {{ permission | permission }}
+                </option>
+            }
+        </select>
+        </div>
+
+      <!-- Buttons -->
+      <div class="d-flex justify-content-end gap-2">
+        <button type="button" class="btn btn-outline-secondary" (click)="cancel()">
+          Cancel
+        </button>
+
+        <app-loading-button lable="Submit" [loading]="submitting()" (clicked)="submit()" />
+      </div>
+
+    </form>
+
+  </div>
+
+</div>

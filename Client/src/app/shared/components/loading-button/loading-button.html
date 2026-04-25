@@ -1,0 +1,11 @@
+<button type="submit" [class]="btnClass()" (click)="clicked.emit()" [disabled]="loading()">
+     @if(loading()) {
+        <div>
+            <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+            <span>Loading...</span>
+        </div>
+    }
+    @else {
+         {{lable()}}
+    }
+</button>

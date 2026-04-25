@@ -1,0 +1,41 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+  <div class="container-fluid">
+
+    <a class="navbar-brand" href="#">Task Management</a>
+
+    <button class="navbar-toggler" type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNavAltMarkup">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+
+      <!-- Left Menu -->
+      <div class="navbar-nav">
+        <a class="nav-link" routerLink="/" routerLinkActive="active">Home</a>
+        <a class="nav-link" routerLink="/users" routerLinkActive="active">Users</a>
+        <a class="nav-link" routerLink="/tasks" routerLinkActive="active">Tasks</a>
+        <a class="nav-link" routerLink="/tasks/mine" routerLinkActive="active">My Tasks</a>
+      </div>
+
+      <!-- Right Auth Section -->
+      <div class="navbar-nav ms-auto d-flex align-items-center">
+
+        @if(auth.isLoggedIn()) {
+          <span class="nav-link disabled ms-2">
+              Welcome, <span class="text-primary">{{auth.session()!.userName}}</span>
+          </span>
+
+          <a class="btn btn-outline-danger btn-sm ms-2" (click)="logout()">
+            Logout
+          </a>
+        }
+        @else {
+          <a class="btn btn-primary btn-sm ms-2" routerLink="/login">Login</a>
+        }
+
+      </div>
+    </div>
+  </div>
+</nav>

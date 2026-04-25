@@ -1,0 +1,21 @@
+<div class="container d-flex align-items-center justify-content-center vh-100">
+  <div class="text-center">
+    <h1 class="display-1 fw-bold text-danger">500</h1>
+    <p class="fs-3">
+      <span class="text-danger">Oops!</span> Something went wrong.
+    </p>
+    <p class="lead">
+      Our server encountered an error. Please try again later.
+    </p>
+
+    <div class="d-flex justify-content-center gap-2">
+      <button class="btn btn-primary" (click)="reload()">
+        Try Again
+      </button>
+
+      <a routerLink="/" class="btn btn-outline-secondary">
+        Go Home
+      </a>
+    </div>
+  </div>
+</div>

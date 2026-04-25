@@ -1,0 +1,66 @@
+<div class="container mt-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+
+    <h3 class="mb-0">Users Management</h3>
+
+    <button class="btn btn-primary" *hasPermission="createPermission" routerLink="../create">
+        Create User
+    </button>
+
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+
+      <thead class="table-light">
+        <tr>
+          <th>#</th>
+          <th>User Name</th>
+          <th>Permissions</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        @for(user of usersList(); track user.id) {
+
+        <!-- User Row -->
+        <tr>
+          <td>{{user.id}}</td>
+
+          <td class="fw-semibold">
+            {{ user.userName }}
+          </td>
+
+          <td>
+            @for(permission of user.permissions; track $index) {
+                <span class="badge bg-secondary me-1">{{permission | permission}}</span>
+            }
+          </td>
+
+          <td class="text-end">
+            <button class="btn btn-sm btn-outline-primary me-2" *hasPermission="updatePermission" [routerLink]="['../update', user.id]">
+              Update
+            </button>
+
+            <app-loading-button btnClass="btn btn-sm btn-outline-danger" lable="delete" [loading]="user.id == deletedUserId()" (clicked)="delete(user.id)" *hasPermission="deletePermission"/>
+          </td>
+        </tr>
+        }
+
+      </tbody>
+
+    </table>
+    @if(loading()) {
+      <div class="text-center">
+        <div>
+            <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+            <span>Loading...</span>
+        </div>
+      </div>
+    }
+
+
+</div>
