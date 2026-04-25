@@ -1,0 +1,44 @@
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    networks:
+    - app-network
+    volumes:
+    - sqldata:/var/opt/mssql
+    environment:
+    - ACCEPT_EULA=Y
+    - MSSQL_PID=Evaluation
+    - MSSQL_SA_PASSWORD=Pa$$w0rd123
+  
+  api:
+    image: hemamoawad/task-management-api:latest
+    build:
+      context: .
+      dockerfile: TaskManagement/dockerfile
+    ports:
+      - 8080:8080
+    networks:
+    - app-network
+    environment:
+    - ASPNETCORE_ENVIRONMENT=Production
+    - ASPNETCORE_URLS=http://+:8080
+    - ConnectionStrings__Sql=server=sqlserver;database=TaskManagement;User Id=sa;Password=Pa$$w0rd123;TrustServerCertificate=True;
+    depends_on:
+    - sqlserver
+
+  client:
+    image: hemamoawad/task-management-client:latest
+    build:
+      context: .
+      dockerfile: Client/dockerfile
+    ports:
+    - 80:80
+    networks:
+    - app-network
+
+volumes:
+  sqldata:
+
+networks:
+  app-network:
