@@ -45,8 +45,24 @@ jobs:
     - name: deploying
       run: echo application deployed successfully
 
+  docker:
+     needs: build
+     runs-on: ubuntu-latest
 
+     steps:
+        - name: checkout code
+          uses: actions/checkout@v6.0.2
 
+        - name: docker login
+          uses: docker/login-action@v4.0.0
+          with:
+            username: ${{secrets.DOCKERUSER}}
+            password: ${{secrets.DOCKERPASSWORD}}
+
+        - name: build and push the image
+          run: |
+             docker compose build
+             docker compose push
 
 
 
