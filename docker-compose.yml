@@ -9,33 +9,44 @@ services:
     environment:
     - ACCEPT_EULA=Y
     - MSSQL_PID=Evaluation
-    - MSSQL_SA_PASSWORD=Pa$$w0rd123
+    - MSSQL_SA_PASSWORD=${SA_PASSWORD}
+    restart: unless-stopped
   
   api:
     image: hemamoawad/task-management-api:latest
     build:
       context: .
       dockerfile: TaskManagement/dockerfile
-    ports:
-      - 8080:8080
     networks:
     - app-network
     environment:
     - ASPNETCORE_ENVIRONMENT=Production
     - ASPNETCORE_URLS=http://+:8080
-    - ConnectionStrings__Sql=server=sqlserver;database=TaskManagement;User Id=sa;Password=Pa$$w0rd123;TrustServerCertificate=True;
+    - ConnectionStrings__Sql=server=sqlserver;database=TaskManagement;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;
     depends_on:
     - sqlserver
+    restart: unless-stopped
 
   client:
     image: hemamoawad/task-management-client:latest
     build:
       context: .
       dockerfile: Client/dockerfile
-    ports:
-    - 80:80
     networks:
     - app-network
+    restart: unless-stopped
+  
+  reverseProxy:
+    image: nginx:alpine
+    ports: 
+    - 5150:80
+    networks:
+    - app-network
+    volumes:
+    - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+    - api
+    - client
 
 volumes:
   sqldata:
