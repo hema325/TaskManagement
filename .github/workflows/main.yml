@@ -64,10 +64,18 @@ jobs:
            username: ${{ secrets.SSH_USER }}
            key: ${{ secrets.SSH_PRIVATE_KEY }}
            script: |
-            cd /home/hema/Projects/TaskManagement
-            docker compose down
-            docker compose pull
-            docker compose up
+               set -e
+               
+               cd /home/hema/Projects/TaskManagement
+         
+               echo "Stopping containers..."
+               docker compose down
+         
+               echo "Pulling latest images..."
+               docker compose pull
+         
+               echo "Starting containers..."
+               docker compose up -d
 
 
 
