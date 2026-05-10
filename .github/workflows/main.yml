@@ -1,4 +1,4 @@
-name: CI/CD
+name: CI/CD 
 
 on:
    workflow_dispatch:
@@ -22,30 +22,8 @@ jobs:
       run: |
         dotnet restore TaskManagement/TaskManagement.csproj
         dotnet build TaskManagement/TaskManagement.csproj -c Release --no-restore
-        dotnet publish TaskManagement/TaskManagement.csproj -c Release -o TaskManagement/publish --no-restore --no-build
 
-    - name: upload published files to artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: api-artifact
-        path: TaskManagement/publish
-        retention-days: 1
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: download published files from artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: api-artifact
-        path: .
-   
-    - name: deploying
-      run: echo application deployed successfully
-
-  docker:
+  publish:
      needs: build
      runs-on: ubuntu-latest
 
@@ -63,9 +41,33 @@ jobs:
           run: |
              docker compose build
              docker compose push
+             
+  deploy:
+    needs: publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v6.0.2
+
+      - name: docker login
+        uses: docker/login-action@v4.0.0
+        with:
+          username: ${{secrets.DOCKERUSER}}
+          password: ${{secrets.DOCKERPASSWORD}}
 
 
-
+      - name: Execute SSH commands
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+           host: ${{ secrets.SSH_HOST }}
+           username: ${{ secrets.SSH_USER }}
+           key: ${{ secrets.SSH_PRIVATE_KEY }}
+           script: |
+            cd /home/hema/Projects/TaskManagement
+            docker compose down
+            docker compose pull
+            docker compose up
 
 
 
